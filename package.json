@@ -1,0 +1,19 @@
+{
+  "name": "landscape",
+  "version": "1.0.0",
+  "description": "quick javascript canvas experiment that projects a 2d map as a 3d-like view",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rvounik/landscape.git"
+  },
+  "author": "rvounik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rvounik/landscape/issues"
+  },
+  "homepage": "https://github.com/rvounik/landscape#readme"
+}
