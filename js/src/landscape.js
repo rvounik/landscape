@@ -1,6 +1,6 @@
 
 var canvas, stage, container, gctx, map, player, rayArray = [], KEYCODE_LEFT = 37, KEYCODE_RIGHT = 39, KEYCODE_UP = 38, KEYCODE_DOWN = 40, leftHeld, rightHeld, upHeld, downHeld, loaded = false; // set some *GASP* global vars
-var fov = 70, depth = 180, steps = 64, maph = 300, mapw = 300, resx = 150, resy = 150, fps = 30, speed = 1.8; //engine config
+var fov = 70, depth = 80, steps = 8, maph = 300, mapw = 300, resx = 75, resy = 150, fps = 30, speed = 1.8; //engine config
 var rayShift = mapw / resx, rotShift = fov / resx, pi = 3.14159265359; // some precalculations to improve engine speed
 var oldrot, oldx, oldy;
 
