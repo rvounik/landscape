@@ -20,7 +20,6 @@ import easeljs from 'easeljs';
 
     // load bitmap of heightmap to canvas object using createjs
     // with the exact id handed over by an appConfig parameter
-    // etc.
 
     });
 })(appConfig);
