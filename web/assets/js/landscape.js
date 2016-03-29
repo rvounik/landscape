@@ -7,22 +7,92 @@ var _jquery = require('jquery');
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-//import easeljs from 'easeljs/lib/easeljs-0.8.2.combined';
+// confused as hell. how can you call methods from jquery INSIDE the anon func ((config){} ? thats whats being done in psybizz index.js too! how does this work??
+// easeljs/createjs has modularity issues, this is the way to include it currenctly. please see https://gist.github.com/iamkether/752e381e03ddcb78f637
 
-(function (config) {
+var _shapesCircle = require('./shapes/circle');
+
+// lets start by having an external class for a rectangular shape that can be imported here
+
+var createjs = window.createjs;(function (config) {
 
     (0, _jquery2['default'])(document).ready(function () {
-
-        // quick test
-        var stage = new createjs.Stage(config.selector.canvas);
-        var shape = new createjs.Shape();
-        shape.graphics.beginFill('red').drawRect(100, 100, 100, 100);
-        stage.addChild(shape);
-        stage.update();
+        // in here you put click handlers and such
     });
+
+    // actual app code goes here, outside the document.ready to keep those separated
+
+    // init the canvas and set some.. globals. OH NO NOT AGAIN.. what am I doing wrong?
+    var stage = new createjs.Stage(config.selector.canvas);
+    var scaleInc = 0;
+    var inc = 0;
+
+    // now construct a disc from the imported Circle class and hand over its constructor props (there is another word for that, I forgot)
+    var disc = new _shapesCircle.Circle({
+        x: 100,
+        y: 100,
+        radius: 50,
+        color: 'red'
+    });
+
+    // add the instance to the stage
+    stage.addChild(disc);
+
+    // add the createjs' ticker function
+    createjs.Ticker.addEventListener("tick", handleTick);
+    createjs.Ticker.setFPS(config.fps);
+
+    // define ticker
+    function handleTick() {
+        // do something dynamic
+        disc.scaleX = disc.scaleY = 1 + scaleInc;
+        scaleInc += Math.sin(inc) / 100;
+        inc += 0.05;
+        stage.update();
+    }
 })(appConfig);
 
-},{"jquery":2}],2:[function(require,module,exports){
+},{"./shapes/circle":2,"jquery":3}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Shape = window.createjs.Shape;
+
+var Circle = (function (_Shape) {
+    _inherits(Circle, _Shape);
+
+    function Circle(options) {
+        _classCallCheck(this, Circle);
+
+        _get(Object.getPrototypeOf(Circle.prototype), "constructor", this).call(this);
+        // The Shape class's constructor doesn't fire through the normal
+        // ES6 constructor->super() function, so we have to initiate the
+        // old way, and then return it as as the constructed object
+        var c = new Shape();
+
+        c.color = options.color;
+        c.graphics.beginFill(options.color).drawCircle(0, 0, options.radius);
+        c.x = options.x;
+        c.y = options.y;
+
+        return c;
+    }
+
+    return Circle;
+})(Shape);
+
+exports.Circle = Circle;
+
+},{}],3:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
