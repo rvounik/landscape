@@ -5,7 +5,7 @@ import { Circle } from './shapes/circle'; // lets start by having an external cl
 ((config) => {
 
     $(document).ready(() => {
-        // in here you put click handlers and such
+        // in here you put keydown handlers and such
     });
 
     // actual app code goes here, outside the document.ready to keep those separated
@@ -35,7 +35,7 @@ import { Circle } from './shapes/circle'; // lets start by having an external cl
         // do something dynamic
         disc.scaleX = disc.scaleY = 1 + scaleInc;
         scaleInc += (Math.sin(inc)/100);
-        inc += 0.05;
+        inc += .05;
         stage.update();
     }
 

@@ -17,7 +17,7 @@ var _shapesCircle = require('./shapes/circle');
 var createjs = window.createjs;(function (config) {
 
     (0, _jquery2['default'])(document).ready(function () {
-        // in here you put click handlers and such
+        // in here you put keydown handlers and such
     });
 
     // actual app code goes here, outside the document.ready to keep those separated
@@ -47,7 +47,7 @@ var createjs = window.createjs;(function (config) {
         // do something dynamic
         disc.scaleX = disc.scaleY = 1 + scaleInc;
         scaleInc += Math.sin(inc) / 100;
-        inc += 0.05;
+        inc += .05;
         stage.update();
     }
 })(appConfig);
