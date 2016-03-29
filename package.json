@@ -28,6 +28,8 @@
     "grunt-browserify": "^4.0.1",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-eslint": "^18.0.0",
+    "grunt-scss-lint": "^0.3.8",
     "jquery": "~2.1.4"
   }
 }

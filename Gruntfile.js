@@ -11,7 +11,34 @@ module.exports = function(grunt) {
                 "web/assets"
             ]
         },
+        scsslint: {
+            "allFiles": [
+                "css/*.css"
+            ],
+            "options": {
+                "bundleExec": false,
+                "colorizeOutput": true,
+                "maxBuffer": 100000,
+                "compact": true,
+                "config": "scss-lint.yml"
+            }
+        },
+        eslint: {
+            "target": "js/src/**/*.js"
+        },
         browserify: {
+            "develop": {
+                "options": {
+                    "transform": [
+                        "babelify"
+                    ],
+                    "watch": true,
+                    "keepAlive": true
+                },
+                "files": {
+                    "build/js/landscape.js": "js/src/landscape.js"
+                }
+            },
             "build": {
                 "options": {
                     "transform": [
@@ -54,11 +81,14 @@ module.exports = function(grunt) {
 
     });
 
-    // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-scss-lint');
+    grunt.loadNpmTasks('grunt-eslint');
 
-    // Default task(s).
-    grunt.registerTask('default', ['clean', 'browserify', 'copy']);
-}
+    grunt.registerTask('default', ['clean', 'scsslint', 'eslint', 'browserify:build', 'copy']);
+    grunt.registerTask('lint:css', ['scsslint']);
+    grunt.registerTask('lint:js', ['eslint']);
+    grunt.registerTask('develop:js', ['browserify:develop']);
+};
