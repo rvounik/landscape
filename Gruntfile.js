@@ -1,6 +1,5 @@
 module.exports = function(grunt) {
 
-    // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: {
@@ -78,7 +77,6 @@ module.exports = function(grunt) {
                 ]
             }
         }
-
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -86,6 +84,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-scss-lint');
     grunt.loadNpmTasks('grunt-eslint');
+    // todo: add compass, autoprefixer, uglify
+    // todo: add JS unit testing
 
     grunt.registerTask('default', ['clean', 'scsslint', 'eslint', 'browserify:build', 'copy']);
     grunt.registerTask('lint:css', ['scsslint']);
