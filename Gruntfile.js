@@ -3,76 +3,76 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: {
-            "build": [
-                "build/js"
+            build: [
+                'build/js'
             ],
-            "assets": [
-                "web/assets"
+            assets: [
+                'web/assets'
             ]
         },
         scsslint: {
-            "allFiles": [
-                "css/*.css"
+            allFiles: [
+                'css/*.scss'
             ],
-            "options": {
-                "bundleExec": false,
-                "colorizeOutput": true,
-                "maxBuffer": 100000,
-                "compact": true,
-                "config": "scss-lint.yml"
+            options: {
+                bundleExec: false,
+                colorizeOutput: true,
+                maxBuffer: 100000,
+                compact: true,
+                config: 'scss-lint.yml'
             }
         },
         eslint: {
-            "target": "js/src/**/*.js"
+            target: 'js/src/**/*.js'
         },
         browserify: {
-            "develop": {
-                "options": {
-                    "transform": [
-                        "babelify"
+            develop: {
+                options: {
+                    transform: [
+                        'babelify'
                     ],
-                    "watch": true,
-                    "keepAlive": true
+                    watch: true,
+                    keepAlive: true
                 },
-                "files": {
-                    "build/js/landscape.js": "js/src/landscape.js"
+                files: {
+                    'build/js/landscape.js': 'js/src/landscape.js'
                 }
             },
-            "build": {
-                "options": {
-                    "transform": [
-                        "babelify"
+            build: {
+                options: {
+                    transform: [
+                        'babelify'
                     ],
-                    "watch": false,
-                    "keepAlive": false
+                    watch: false,
+                    keepAlive: false
                 },
-                "files": {
-                    "build/js/landscape.js": "js/src/landscape.js"
+                files: {
+                    'build/js/landscape.js': 'js/src/landscape.js'
                 }
             }
         },
         copy: {
-            "build": {
-                "files": [
+            build: {
+                files: [
                     {
-                        "src": [
-                            "build/js/*.js"
+                        src: [
+                            'build/js/*.js'
                         ],
-                        "dest": "web/assets/js",
-                        "flatten": true,
-                        "expand": true
+                        dest: 'web/assets/js',
+                        flatten: true,
+                        expand: true
                     }
                 ]
             },
-            "vendor": {
-                "files": [
+            vendor: {
+                files: [
                     {
-                        "src": [
-                            "node_modules/babel-polyfill/dist/polyfill.min.js"
+                        src: [
+                            'node_modules/babel-polyfill/dist/polyfill.min.js'
                         ],
-                        "dest": "web/assets/js/vendor/",
-                        "expand": true,
-                        "flatten": true
+                        dest: 'web/assets/js/vendor/',
+                        expand: true,
+                        flatten: true
                     }
                 ]
             }
