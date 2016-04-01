@@ -51,6 +51,23 @@ module.exports = function(grunt) {
                 }
             }
         },
+        compass: {
+            build: {
+                options: {
+                    importPath: [
+                        'node_modules'
+                    ],
+                    sassDir: [
+                        'css/src'
+                    ],
+                    cssDir: 'web/assets/css/',
+                    environment: 'production',
+                    noLineComments: false,
+                    outputStyle: 'compressed',
+                    specify: 'css/src/screen.scss'
+                }
+            }
+        },
         copy: {
             build: {
                 files: [
@@ -84,11 +101,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-scss-lint');
     grunt.loadNpmTasks('grunt-eslint');
-    // todo: add compass, autoprefixer, uglify
+    grunt.loadNpmTasks('grunt-contrib-compass');
+    // todo: add autoprefixer, uglify
     // todo: add JS unit testing
 
-    grunt.registerTask('default', ['clean', 'scsslint', 'eslint', 'browserify:build', 'copy']);
+    grunt.registerTask('default', ['clean', 'scsslint', 'compass', 'eslint', 'browserify:build', 'copy']);
     grunt.registerTask('lint:css', ['scsslint']);
     grunt.registerTask('lint:js', ['eslint']);
     grunt.registerTask('develop:js', ['browserify:develop']);
+    grunt.registerTask('develop:css', ['compass']);
 };

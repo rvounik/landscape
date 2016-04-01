@@ -7,17 +7,18 @@ note that this is using some crude, random interpolation to get the heights of e
 
 demo: http://www.vanooij.nl/r8/uploads/landscape/landscape.html
 
-
-
 # prerequisites
 
-- ruby
-
+- ruby 2.x
 needed for: running scss-lint
-installation: sudo apt-get install ruby
+installation: sudo apt-get install ruby2.0
+(sudo ln -sf /usr/bin/ruby2.0 /usr/bin/ruby)
 
 - scss-lint
-
 needed for: linting scss
 installation: sudo gem install scss-lint
+
+- compass
+needed for: compiling scss into css
+installation: sudo gem install compass
 

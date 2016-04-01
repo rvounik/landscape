@@ -7,13 +7,11 @@
     "jquery": true,
     "commonjs": true
   },
-
   "globals": {
     "initialState": false,
     "appConfig": false,
     "OrganisationsInitialState": false
   },
-
   "ecmaFeatures": {
     "arrowFunctions": true,
     "binaryLiterals": true,
@@ -38,7 +36,6 @@
     "globalReturn": true,
     "jsx": true
   },
-
   "rules": {
     "no-undef": 2,
     "comma-dangle": 2,
@@ -68,7 +65,6 @@
     "use-isnan": 2,
     "valid-jsdoc": 2,
     "valid-typeof": 2,
-
     "brace-style": [2, "1tbs", { "allowSingleLine": false }],
     "camelcase": [2, {"properties": "always"}],
     "comma-spacing": [2, {"before": false, "after": true}],
