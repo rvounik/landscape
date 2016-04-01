@@ -1,5 +1,4 @@
 module.exports = function(grunt) {
-
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: {
@@ -85,11 +84,24 @@ module.exports = function(grunt) {
                 files: [
                     {
                         src: [
-                            'node_modules/babel-polyfill/dist/polyfill.min.js'
+                            'node_modules/babel-polyfill/dist/polyfill.min.js',
+                            'node_modules/easeljs/lib/easeljs-0.8.2.min.js'
                         ],
                         dest: 'web/assets/js/vendor/',
                         expand: true,
                         flatten: true
+                    }
+                ]
+            },
+            assets: {
+                files: [
+                    {
+                        src: [
+                            'img/*'
+                        ],
+                        dest: 'web/assets/',
+                        flatten: false,
+                        expand: true
                     }
                 ]
             }
@@ -122,15 +134,14 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-browserify');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-scss-lint');
-    grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-scss-lint');
+    grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-autoprefixer');
-    // todo: add autoprefixer, uglify
     // todo: add JS unit testing
 
     grunt.registerTask('default', ['clean:build', 'eslint', 'browserify:build', 'uglify:build', 'clean:assets', 'scsslint', 'compass', 'autoprefixer', 'copy']);
