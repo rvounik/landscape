@@ -101,6 +101,13 @@ module.exports = function(grunt) {
                 }
             }
         },
+        autoprefixer: {
+            build: {
+                files: {
+                    'web/assets/css/screen.css': 'web/assets/css/screen.css'
+                }
+            }
+        },
         watch: {
                 files: [
                     'css/src/**/*.scss'
@@ -122,10 +129,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-autoprefixer');
     // todo: add autoprefixer, uglify
     // todo: add JS unit testing
 
-    grunt.registerTask('default', ['clean:build', 'scsslint', 'compass', 'eslint', 'browserify:build', 'uglify:build', 'clean:assets', 'copy']);
+    grunt.registerTask('default', ['clean:build', 'eslint', 'browserify:build', 'uglify:build', 'clean:assets', 'scsslint', 'compass', 'autoprefixer', 'copy']);
 
     grunt.registerTask('lint:css', ['scsslint']);
     grunt.registerTask('lint:js', ['eslint']);
