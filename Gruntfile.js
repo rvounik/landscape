@@ -93,7 +93,18 @@ module.exports = function(grunt) {
                     }
                 ]
             }
-        }
+        },
+        watch: {
+                files: [
+                    'css/src/**/*.scss'
+                ],
+                tasks: [
+                    'compass:build'
+                ]
+            },
+            options: {
+                spawn: false
+            }
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -102,6 +113,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-scss-lint');
     grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-contrib-compass');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     // todo: add autoprefixer, uglify
     // todo: add JS unit testing
 
@@ -109,5 +121,5 @@ module.exports = function(grunt) {
     grunt.registerTask('lint:css', ['scsslint']);
     grunt.registerTask('lint:js', ['eslint']);
     grunt.registerTask('develop:js', ['browserify:develop']);
-    grunt.registerTask('develop:css', ['compass']);
+    grunt.registerTask('develop:css', ['watch']);
 };
