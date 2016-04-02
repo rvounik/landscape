@@ -3,7 +3,7 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
 // reuse for ray assets etc: import { Circle } from './shapes/circle'; // lets start by having an external class for a circular shape that can be imported here
 
 ((config) => {
-    // todo: we need these as globals throughout the app. is it okay to store them here?
+    // todo: need these as globals throughout the app. is it okay to store them here?
     let leftHeld = false;
     let rightHeld = false;
     let upHeld = false;
@@ -82,7 +82,7 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
             player.y = 105;
             player.rotation = 185;
 
-            const los = new createjs.Shape();
+            var los = new createjs.Shape();
             los.graphics.setStrokeStyle(.5);
             los.graphics.beginStroke('rgba(255, 0, 0, 1)').moveTo(0, 0).lineTo(0, (0 - config.config.depth)).endStroke();
             stage.addChild(los);
@@ -93,12 +93,20 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
             container.y = 300;
 
             // create ticker
-            createjs.Ticker.addEventListener('tick', handleTick).bind(this);
+            createjs.Ticker.addEventListener(
+                'tick',
+                handleTick(this),
+                false
+            );
             createjs.Ticker.setFPS(config.config.fps);
         };
     }
 
-    function handleTick() {
+    function handleTick(e) {
+        // todo: find a way to retrieve all defined vars from the init scope in here
+        let los = this.los;
+        let player = this.player;
+
         if (leftHeld) { // handle rotation
             player.rotation -= 3 * config.config.speed;
         } else if (rightHeld) {
@@ -118,6 +126,7 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
         los.y = player.y;
 
         if (oldrot == player.rotation && oldx == player.x && oldy == player.y) {
+            // do nothing
         } else {
             getRGB();
             oldrot = player.rotation;
@@ -129,7 +138,7 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
     }
 
     function getRGB() {
-        // todo: import this
+        // todo: import this but find way to pass over old globals to this local scope
 
         container.removeAllChildren(); // remove all previous shapes
 
@@ -176,6 +185,7 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
     }
 
     function getLineEndCoords(originX, originY, hypotenuse, angle) { // feed it with angle and length of the 'opposite' (longest side) and it will calculate matching x,y coords.
+        // todo: import this
         let x = originX + (Math.sin(angle * (config.config.pi / 180))) * hypotenuse;
         let y = originY + (Math.cos(angle * (config.config.pi / 180))) * hypotenuse;
         return [x, y];

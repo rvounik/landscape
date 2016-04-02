@@ -12,7 +12,7 @@ var createjs = window.createjs; // easeljs/createjs has modularity issues, this 
 // reuse for ray assets etc: import { Circle } from './shapes/circle'; // lets start by having an external class for a circular shape that can be imported here
 
 (function (config) {
-    // todo: we need these as globals throughout the app. is it okay to store them here?
+    // todo: need these as globals throughout the app. is it okay to store them here?
     var leftHeld = false;
     var rightHeld = false;
     var upHeld = false;
@@ -102,12 +102,16 @@ var createjs = window.createjs; // easeljs/createjs has modularity issues, this 
             container.y = 300;
 
             // create ticker
-            createjs.Ticker.addEventListener('tick', handleTick).bind(this);
+            createjs.Ticker.addEventListener('tick', handleTick(this), false);
             createjs.Ticker.setFPS(config.config.fps);
         };
     }
 
-    function handleTick() {
+    function handleTick(e) {
+        // todo: find a way to retrieve all defined vars from the init scope in here
+        var los = this.los;
+        var player = this.player;
+
         if (leftHeld) {
             // handle rotation
             player.rotation -= 3 * config.config.speed;
@@ -139,7 +143,7 @@ var createjs = window.createjs; // easeljs/createjs has modularity issues, this 
     }
 
     function getRGB() {
-        // todo: import this
+        // todo: import this but find way to pass over old globals to this local scope
 
         container.removeAllChildren(); // remove all previous shapes
 
