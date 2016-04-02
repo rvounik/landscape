@@ -30,8 +30,8 @@ module.exports = function(grunt) {
                     transform: [
                         'babelify'
                     ],
-                    watch: true,
-                    keepAlive: true
+                    watch: false,
+                    keepAlive: false
                 },
                 files: {
                     'build/js/landscape.js': 'js/src/landscape.js'
@@ -88,8 +88,8 @@ module.exports = function(grunt) {
                             'node_modules/easeljs/lib/easeljs-0.8.2.min.js'
                         ],
                         dest: 'web/assets/js/vendor/',
-                        expand: true,
-                        flatten: true
+                        flatten: true,
+                        expand: true
                     }
                 ]
             },
@@ -121,6 +121,7 @@ module.exports = function(grunt) {
             }
         },
         watch: {
+            css: {
                 files: [
                     'css/src/**/*.scss'
                 ],
@@ -128,9 +129,18 @@ module.exports = function(grunt) {
                     'compass:build'
                 ]
             },
+            js: {
+                files: [
+                    'js/src/**/*.js'
+                ],
+                tasks: [
+                    'develop:js'
+                ]
+            },
             options: {
                 spawn: false
             }
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -149,6 +159,6 @@ module.exports = function(grunt) {
     grunt.registerTask('lint:css', ['scsslint']);
     grunt.registerTask('lint:js', ['eslint']);
 
-    grunt.registerTask('develop:js', ['browserify:develop']);
-    grunt.registerTask('develop:css', ['compass', 'watch']);
+    grunt.registerTask('develop:js', ['browserify:develop', 'copy', 'watch:js']);
+    grunt.registerTask('develop:css', ['compass', 'watch:css']);
 };
