@@ -2,7 +2,9 @@ import $ from 'jquery'; // confused as hell. how can you call methods from jquer
 let createjs = window.createjs; // easeljs/createjs has modularity issues, this is the way to include it currently. please see https://gist.github.com/iamkether/752e381e03ddcb78f637
 // reuse for ray assets etc: import { Circle } from './shapes/circle'; // lets start by having an external class for a circular shape that can be imported here
 
+// todo: unsure about how to 'start' the app code. is this the right place?
 ((config) => {
+
     // todo: need these as globals throughout the app. is it okay to store them here?
     let leftHeld = false;
     let rightHeld = false;
@@ -10,7 +12,13 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
     let downHeld = false;
     let rayArray = [];
 
+    // todo: get rid of globals
+    let player, los, oldrot, container, gctx, oldx, oldy, stage;
+    let rotShift = config.config.fov / config.config.resx;
+    let rayShift = config.config.mapw / config.config.resx;
+
     $(document).ready(() => {
+
         const KEYCODE_LEFT = 37;
         const KEYCODE_RIGHT = 39;
         const KEYCODE_UP = 38;
@@ -56,13 +64,13 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
 
     function init() {
         const canvas = document.getElementById(config.selector.canvas);
-        const stage = new createjs.Stage(canvas);
+        stage = new createjs.Stage(canvas);
 
         // create 'ghost canvas' from which pixel data is subtracted
         const ghostcanvas = document.createElement('canvas');
         ghostcanvas.height = canvas.height;
         ghostcanvas.width = canvas.width;
-        const gctx = ghostcanvas.getContext('2d');
+        gctx = ghostcanvas.getContext('2d');
 
         // load image assets
         let map = new Image();
@@ -75,19 +83,20 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
             gctx.drawImage(map, 0, 0);
 
             // create the player
-            const player = new createjs.Shape();
+            // todo: import as player.class
+            player = new createjs.Shape();
             player.graphics.beginFill('#ff0000').drawRect(0, 0, 1, 1).endFill();
             stage.addChild(player);
             player.x = 208; // player needs to be at the global x=160, not the local one as initiated by this shape creation
             player.y = 105;
             player.rotation = 185;
 
-            var los = new createjs.Shape();
+            los = new createjs.Shape();
             los.graphics.setStrokeStyle(.5);
             los.graphics.beginStroke('rgba(255, 0, 0, 1)').moveTo(0, 0).lineTo(0, (0 - config.config.depth)).endStroke();
             stage.addChild(los);
 
-            const container = new createjs.Container();
+            container = new createjs.Container();
             stage.addChild(container);
             container.x = 300;
             container.y = 300;
@@ -102,10 +111,8 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
         };
     }
 
-    function handleTick(e) {
+    function handleTick() {
         // todo: find a way to retrieve all defined vars from the init scope in here
-        let los = this.los;
-        let player = this.player;
 
         if (leftHeld) { // handle rotation
             player.rotation -= 3 * config.config.speed;
