@@ -1,6 +1,17 @@
-import $ from 'jquery'; // confused as hell. how can you call methods from jquery INSIDE the anon func ((config){} ? thats whats being done in psybizz index.js too! how does this work??
+import $ from 'jquery'; // jquery binds $ to the window scope, so it becomes global. see last lines in jquery.js. in fact, you are doing something similar for createjs here:
 let createjs = window.createjs; // easeljs/createjs has modularity issues, this is the way to include it currently. please see https://gist.github.com/iamkether/752e381e03ddcb78f637
 // reuse for ray assets etc: import { Circle } from './shapes/circle'; // lets start by having an external class for a circular shape that can be imported here
+// import { bla } from './assets/player';
+import Player from './Player';
+
+/*
+import { someMethodThatLivesOutsideThePlayerClass } from './player';
+console.log(someMethodThatLivesOutsideThePlayerClass());
+*/
+
+/*
+console.log(player.someMethodThatLivesInsideThePlayerClass());
+*/
 
 // todo: unsure about how to 'start' the app code. is this the right place?
 ((config) => {
@@ -12,8 +23,11 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
     let downHeld = false;
     let rayArray = [];
 
-    // todo: get rid of globals
-    let player, los, oldrot, container, gctx, oldx, oldy, stage;
+    // create player here so both init and handleTick have access to it
+    let player = new Player(208, 105, 185);
+
+    // init the rest
+    let los, oldrot, container, gctx, oldx, oldy, stage;
     let rotShift = config.config.fov / config.config.resx;
     let rayShift = config.config.mapw / config.config.resx;
 
@@ -66,6 +80,9 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
         const canvas = document.getElementById(config.selector.canvas);
         stage = new createjs.Stage(canvas);
 
+        // init the player
+        stage.addChild(player);
+
         // create 'ghost canvas' from which pixel data is subtracted
         const ghostcanvas = document.createElement('canvas');
         ghostcanvas.height = canvas.height;
@@ -81,15 +98,6 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
             stage.addChild(bitmap);
             stage.update();
             gctx.drawImage(map, 0, 0);
-
-            // create the player
-            // todo: import as player.class
-            player = new createjs.Shape();
-            player.graphics.beginFill('#ff0000').drawRect(0, 0, 1, 1).endFill();
-            stage.addChild(player);
-            player.x = 208; // player needs to be at the global x=160, not the local one as initiated by this shape creation
-            player.y = 105;
-            player.rotation = 185;
 
             los = new createjs.Shape();
             los.graphics.setStrokeStyle(.5);
@@ -121,6 +129,7 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
         }
 
         if (upHeld) { // handle translation
+            player.moveForward();
             player.x -= config.config.speed * Math.sin(player.rotation * (config.config.pi / -180));
             player.y -= config.config.speed * Math.cos(player.rotation * (config.config.pi / -180));
         } else if (downHeld) {
@@ -181,7 +190,7 @@ let createjs = window.createjs; // easeljs/createjs has modularity issues, this 
                     blue = 0;
                 }
                 let green = 255 * rayArray[c];
-                let red = 65536 * (55);
+                let red = 65536 * 55;
                 let color = (blue + green + red).toString(16); // quick conversion to hex
                 rayGfx.graphics.beginFill('#' + color).drawRect(0, 0, config.config.mapw / config.config.resx, ((userHeight / 3) - rayArray[c])).endFill(); // width + height of shape is determined by selected output resolution
                 rayGfx.x = (config.config.mapw - rayShift) - ((a * (rayShift))); // shift x amount of pixels according on resx

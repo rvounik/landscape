@@ -1,18 +1,81 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+exports.someMethodThatLivesOutsideThePlayerClass = someMethodThatLivesOutsideThePlayerClass;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function someMethodThatLivesOutsideThePlayerClass() {
+    return true;
+}
+
+/*
+ let player = new createjs.Shape();
+ player.graphics.beginFill('#ff0000').drawRect(0, 0, 1, 1).endFill();
+ stage.addChild(player);
+ */
+
+var Player = (function (_createjs$Shape) {
+    _inherits(Player, _createjs$Shape);
+
+    function Player(options) {
+        _classCallCheck(this, Player);
+
+        _get(Object.getPrototypeOf(Player.prototype), 'constructor', this).call(this); // since we are extending the Shape class, we call super() to inherit its props
+        var c = new createjs.Shape();
+        c.graphics.beginFill('#ff0000').drawRect(0, 0, 1, 1).endFill();
+        c.x = options.x;
+        c.y = options.y;
+        c.rotation = options.rotation;
+    }
+
+    /* some method in the Player class
+     someMethodThatLivesInsideThePlayerClass() {
+        return '(' + this.x + ', ' + this.y + ')';
+    }
+    */
+    return Player;
+})(createjs.Shape);
+
+exports['default'] = Player;
+
+},{}],2:[function(require,module,exports){
+'use strict';
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _jquery = require('jquery');
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-// confused as hell. how can you call methods from jquery INSIDE the anon func ((config){} ? thats whats being done in psybizz index.js too! how does this work??
-var createjs = window.createjs; // easeljs/createjs has modularity issues, this is the way to include it currently. please see https://gist.github.com/iamkether/752e381e03ddcb78f637
+// jquery binds $ to the window scope, so it becomes global. see last lines in jquery.js. in fact, you are doing something similar for createjs here:
+// easeljs/createjs has modularity issues, this is the way to include it currently. please see https://gist.github.com/iamkether/752e381e03ddcb78f637
 // reuse for ray assets etc: import { Circle } from './shapes/circle'; // lets start by having an external class for a circular shape that can be imported here
+// import { bla } from './assets/player';
+
+var _Player = require('./Player');
+
+var _Player2 = _interopRequireDefault(_Player);
+
+/*
+import { someMethodThatLivesOutsideThePlayerClass } from './player';
+console.log(someMethodThatLivesOutsideThePlayerClass());
+*/
+
+/*
+console.log(player.someMethodThatLivesInsideThePlayerClass());
+*/
 
 // todo: unsure about how to 'start' the app code. is this the right place?
-(function (config) {
+var createjs = window.createjs;(function (config) {
 
     // todo: need these as globals throughout the app. is it okay to store them here?
     var leftHeld = false;
@@ -21,9 +84,11 @@ var createjs = window.createjs; // easeljs/createjs has modularity issues, this 
     var downHeld = false;
     var rayArray = [];
 
-    // todo: get rid of globals
-    var player = undefined,
-        los = undefined,
+    // create player here so both init and handleTick have access to it
+    var player = new _Player2['default'](208, 105, 185);
+
+    // init the rest
+    var los = undefined,
         oldrot = undefined,
         container = undefined,
         gctx = undefined,
@@ -82,6 +147,9 @@ var createjs = window.createjs; // easeljs/createjs has modularity issues, this 
         var canvas = document.getElementById(config.selector.canvas);
         stage = new createjs.Stage(canvas);
 
+        // init the player
+        stage.addChild(player);
+
         // create 'ghost canvas' from which pixel data is subtracted
         var ghostcanvas = document.createElement('canvas');
         ghostcanvas.height = canvas.height;
@@ -97,15 +165,6 @@ var createjs = window.createjs; // easeljs/createjs has modularity issues, this 
             stage.addChild(bitmap);
             stage.update();
             gctx.drawImage(map, 0, 0);
-
-            // create the player
-            // todo: import as player.class
-            player = new createjs.Shape();
-            player.graphics.beginFill('#ff0000').drawRect(0, 0, 1, 1).endFill();
-            stage.addChild(player);
-            player.x = 208; // player needs to be at the global x=160, not the local one as initiated by this shape creation
-            player.y = 105;
-            player.rotation = 185;
 
             los = new createjs.Shape();
             los.graphics.setStrokeStyle(.5);
@@ -135,6 +194,7 @@ var createjs = window.createjs; // easeljs/createjs has modularity issues, this 
 
         if (upHeld) {
             // handle translation
+            player.moveForward();
             player.x -= config.config.speed * Math.sin(player.rotation * (config.config.pi / -180));
             player.y -= config.config.speed * Math.cos(player.rotation * (config.config.pi / -180));
         } else if (downHeld) {
@@ -215,7 +275,7 @@ var createjs = window.createjs; // easeljs/createjs has modularity issues, this 
     }
 })(appConfig);
 
-},{"jquery":2}],2:[function(require,module,exports){
+},{"./Player":1,"jquery":3}],3:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -9427,4 +9487,4 @@ return jQuery;
 
 }));
 
-},{}]},{},[1]);
+},{}]},{},[2]);
